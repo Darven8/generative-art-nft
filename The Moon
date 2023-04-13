@@ -1,0 +1,52 @@
+const fs = require("fs");
+const path = require("path");
+
+// Define the directory where the NFT images are located
+const nftDirectory = "/mnt/h/My Drive/Tarot NFT/18. The Moon/18_The_Moon_RN_Batched";
+
+// Read the files in the directory and filter out non-image files
+const files = fs.readdirSync(nftDirectory).filter((file) => {
+  const extension = path.extname(file).toLowerCase();
+  return [".jpg", ".jpeg", ".png", ".gif"].includes(extension);
+});
+
+// Create metadata JSON files for each NFT
+files.forEach((file, index) => {
+  const metadata = {
+    collection: 'Arcana Mind',
+    name: `The Moon #${index + 1}`,
+    description: 'Arcana Mind, is a collection of Tarot AI NFTs that embody the essence of the 22 Major Arcana, offering a unique and personalized perspective on each card through an innovative blend of art and technology. Each NFT is a window into the collective unconscious, inviting you to explore the mysteries of the Tarot in a whole new way',
+    image: `https://ipfs.io/ipfs/bafybeigh6hrswmm7mdd6jhkf2c4fiawo6n6rd345liadnm3vcet2kc34ze/${file}`,
+    // Replace QmV5LEUFVNqnbqg8PLv7Ma2H55ThsgvdmMhCGXRMiDYdVR CID with Your Uploaded Images CID
+    attributes: [
+      {
+        trait_type: "Card Number",
+        value: "XVIII",
+      },
+      {
+        trait_type: "Intuition",
+        interpretation: "The Moon card is associated with the subconscious mind, dreams, and intuition. The animals on the card can represent primal instincts and the animalistic aspects of our psyche",
+      },
+      {
+        trait_type: "Deception",
+        intrepretation: "The Moon card can also indicate deception or illusion, as the moon itself can appear to change shape and size depending on the perspective. The animals on the card may represent the idea of something appearing one way on the surface, but being different or hidden underneath",
+      },
+      {
+        trait_type: "Fear",
+        interpretation: "The Moon card can also represent fear and uncertainty, as the darkness and shadows on the card can create a sense of mystery and foreboding. The animals on the card may represent the fears and anxieties that can lurk in the depths of our psyche",
+      },
+      {  
+        trait_type: "Transformation",
+        interpretation: "The Moon card can also indicate a time of change or transformation, as the moon itself goes through phases and cycles. The animals on the card may represent the idea of shedding old patterns and habits in order to grow and evolve",
+      },
+      {
+        trait_type: "Overall",
+        interpretation: " the Moon card with animals is a powerful symbol of the subconscious mind and the inner workings of the psyche. It can be a reminder to trust our intuition and to be mindful of the illusions and fears that may be holding us back from growth and transformation",
+      }
+    ],
+  };
+  const jsonFileName = path.basename(file, path.extname(file)) + ".json";
+  const jsonFilePath = path.join("./json", jsonFileName);
+  fs.writeFileSync(jsonFilePath, JSON.stringify(metadata, null, 2));
+  console.log(`Created metadata file for ${file}: ${jsonFilePath}`);
+});
